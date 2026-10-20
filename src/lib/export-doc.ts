@@ -1,23 +1,15 @@
-// Client-side PDF/DOCX export for reviewed document text.
-export async function exportPdf(text: string, filename: string) {
-  const { jsPDF } = await import("jspdf");
-  const doc = new jsPDF({ unit: "mm", format: "a4" });
-  const margin = 25, width = 210 - margin * 2, pageH = 297, lineH = 6.2;
-  let y = margin;
-  const lines = text.split("\n");
-  lines.forEach((raw, idx) => {
-    const isTitle = idx === 0;
-    doc.setFont("times", isTitle ? "bold" : "normal");
-    doc.setFontSize(isTitle ? 14 : 12);
-    const wrapped: string[] = raw.trim() === "" ? [""] : doc.splitTextToSize(raw, width);
-    wrapped.forEach((ln) => {
-      if (y + lineH > pageH - margin) { doc.addPage(); y = margin; }
-      if (isTitle) doc.text(ln, 105, y, { align: "center" });
-      else doc.text(ln, margin, y, { align: "left", maxWidth: width });
-      y += lineH;
-    });
-  });
-  doc.save(filename.endsWith(".pdf") ? filename : filename + ".pdf");
+// Browser-side print-to-PDF; does not depend on server-incompatible PDF bundlers.
+export async function exportPdf(text: string, _filename: string) {
+  if (typeof window === "undefined") throw new Error("Exportação PDF disponível no navegador.");
+  const frame = document.createElement("iframe");
+  frame.style.position="fixed";frame.style.right="0";frame.style.bottom="0";frame.style.width="0";frame.style.height="0";frame.style.border="0";
+  document.body.appendChild(frame);
+  const doc=frame.contentDocument;
+  if(!doc)throw new Error("Não foi possível preparar a impressão.");
+  doc.open();doc.write('<!DOCTYPE html><html lang="pt-BR"><head><title>Documento jurídico</title><style>@page{size:A4;margin:3cm 2cm 2cm 3cm}body{font:12pt \"Times New Roman\",serif;line-height:1.5;text-align:justify;white-space:pre-wrap}</style></head><body></body></html>');doc.close();
+  doc.body.textContent=text;
+  frame.contentWindow?.focus();frame.contentWindow?.print();
+  setTimeout(()=>frame.remove(),60000);
 }
 
 export async function exportDocx(text: string, filename: string) {
