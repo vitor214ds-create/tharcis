@@ -27,7 +27,7 @@ export async function exportDocx(text: string, filename: string) {
   const doc = new Document({
     styles: { default: { document: { run: { font: "Times New Roman", size: 24 } } } },
     sections: [{
-      properties: { page: { margin: { top: 1418, bottom: 1418, left: 1418, right: 1418 } } },
+      properties: { page: { margin: { top: 1701, bottom: 1134, left: 1701, right: 1134 } } },
       children: lines.map((ln, i) => new Paragraph({
         alignment: i === 0 ? AlignmentType.CENTER : AlignmentType.JUSTIFIED,
         spacing: { after: 120, line: 360 },
