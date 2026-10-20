@@ -1,0 +1,13 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1792456461440,
+      "tag": "0000_jurisagenda_core",
+      "breakpoints": true
+    }
+  ]
+}
