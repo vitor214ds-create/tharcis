@@ -46,9 +46,10 @@ function joinList(items: string[]) {
 
 export function formatDateLong(iso: string) {
   if (!iso) return "[PREENCHER: data]";
-  const [y, m, d] = iso.split("-").map(Number);
+  const [year, month, day] = iso.split("-").map(Number);
+  const y = year ?? 0, m = month ?? 0, d = day ?? 0;
   const months = ["janeiro","fevereiro","março","abril","maio","junho","julho","agosto","setembro","outubro","novembro","dezembro"];
-  return `${d} de ${months[m - 1]} de ${y}`;
+  return m >= 1 && m <= 12 && d >= 1 && d <= 31 ? `${d} de ${months[m - 1]} de ${y}` : "[PREENCHER: data válida]";
 }
 
 export function buildPoaText(data: PoaData): string {
